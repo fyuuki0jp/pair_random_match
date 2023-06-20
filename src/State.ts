@@ -1,22 +1,25 @@
 import {atom} from 'jotai'
 
-
-export interface member_if {
+// member param
+export interface Member {
     idx:number,
     name:string,
     level:number
 }
-
-export interface pair_if {
+// pair list
+export interface Pair {
     idx:number,
-    pair:member_if[]
+    pair:Member[]
 }
-
-export interface search_if {
+export interface Construct {
+    pairs:number[]
+}
+// pairs 
+export interface ConstructResult {
     [key:string]:number
 }
 
-const membersAtom = atom<member_if[]>([{idx:0,name:'name',level:0}])
+const membersAtom = atom<Member[]>([{idx:0,name:'name',level:0}])
+const constructAtom = atom<Construct>({pairs:[2,3]})
 
-
-export {membersAtom}
+export {membersAtom,constructAtom}

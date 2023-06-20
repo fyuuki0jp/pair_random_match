@@ -1,13 +1,13 @@
 import React from 'react';
 import './App.css';
 import MemberSheet from './MemberSheet';
-import { searchPairPattern } from './Logic';
+import ConstructSetting from './Construct';
 
 function App() {
-  console.log(searchPairPattern([2,3],15))
   return (
     <div className="App">
       <MemberSheet/>
+      <ConstructSetting/>
     </div>
   );
 }

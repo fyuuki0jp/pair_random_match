@@ -1,12 +1,12 @@
 import { useAtom } from 'jotai';
 import React, { useRef, useState } from 'react';
 import {membersAtom} from './State';
-import { searchPairPattern } from './Logic';
+import { combination, searchPairPattern } from './Logic';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faList, faPencil, faPlus, faRemove, faUser } from '@fortawesome/free-solid-svg-icons';
 
 
-function Member(props:{idx:number})
+function MemberRow(props:{idx:number})
 {
     const [members,setMember] = useAtom(membersAtom)
     const [name,setName] = useState(members.filter((member)=> member.idx===props.idx)[0].name)
@@ -52,8 +52,7 @@ function Member(props:{idx:number})
 function MemberSheet(){
     const [members,setMember] = useAtom(membersAtom)
     return (
-        <div style={{'maxWidth':'480px','width':'30vw',padding:'0.5rem'}}>
-            {members.sort((a,b)=> a.idx-b.idx).map(m => <Member idx={m.idx}/>)}
+        <div style={{'minWidth':'300px',maxWidth:'480px',width:'40vw',padding:'0.5rem'}}>
             <div 
                 style={{display:'flex',margin:'0.1rem','justifyContent':'space-between',padding:'0.5rem 0.5rem',border:'solid',borderRadius:'10px',color:'white',backgroundColor:"#77bb41"}}
                 unselectable={'on'}
@@ -63,9 +62,12 @@ function MemberSheet(){
                 <span style={{fontSize:'15pt',maxWidth:'100%',appearance:'none',outline:0,border:'none'}}>名簿に追加</span>
                 <FontAwesomeIcon icon={faList} size='xl' style={{marginLeft:'10px'}}/>
             </div>
+
+            {members.sort((a,b)=> a.idx-b.idx).map(m => <MemberRow idx={m.idx}/>)}
             <button onClick={e=>{
-                alert(JSON.stringify(searchPairPattern([2,3],members.length)))
-            }}>ペア組み数探索</button>
+                alert(JSON.stringify(combination(members,3).length))
+            }}>ペア組み合わせテスト</button>
+            
         </div>
     )
 }

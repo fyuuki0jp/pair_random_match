@@ -11,8 +11,12 @@ export interface Pair {
     idx:number,
     pair:Member[]
 }
+export interface PairProfile { 
+    idx:number,
+    pair_cnt:number,
+}
 export interface Construct {
-    pairs:number[]
+    pairs:PairProfile[]
 }
 // pairs 
 export interface ConstructResult {
@@ -20,6 +24,6 @@ export interface ConstructResult {
 }
 
 const membersAtom = atom<Member[]>([{idx:0,name:'name',level:0}])
-const constructAtom = atom<Construct>({pairs:[2,3]})
+const constructAtom = atom<Construct>({pairs:[{idx:0,pair_cnt:2},{idx:1,pair_cnt:3}]})
 
 export {membersAtom,constructAtom}

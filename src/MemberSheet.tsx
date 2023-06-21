@@ -41,11 +41,11 @@ function MemberRow(props:{idx:number})
     }
 
     return (
-    <div style={{display:'flex',margin:'0.1rem','justifyContent':'space-between',padding:'0.5rem 0.5rem',borderBottom:'solid',color:!edit? 'gray':'blue'}}>
+    <li style={{display:'flex',margin:'0.1rem','justifyContent':'space-between',padding:'0.5rem 0.5rem',borderBottom:'solid',color:!edit? 'gray':'blue'}}>
         {edit ? <FontAwesomeIcon icon={faRemove} size="xl" style={{marginLeft:'10px',color:'red'}} onClick={deleteMember}/>:<FontAwesomeIcon icon={faUser} size="xl" style={{marginLeft:'10px',}}/>}
         <input ref={inputName} style={{fontSize:'12pt',maxWidth:'150px',appearance:'none',outline:0,border:'none'}} value={name} onChange={e=>{setName(e.target.value)}} readOnly={!edit}></input>
         {!edit ? <FontAwesomeIcon icon={faPencil} size="xl" style={{marginLeft:'10px'}} onClick={editMember}/>:<FontAwesomeIcon icon={faCheck} size="xl" style={{color:'green'}}onClick={updateMember}/>}
-        </div>
+        </li>
     )
 }
 

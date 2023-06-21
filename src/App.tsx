@@ -5,7 +5,7 @@ import ConstructSetting from './Construct';
 
 function App() {
   return (
-    <div className="App">
+    <div className="App" style={{display:'flex'}}>
       <MemberSheet/>
       <ConstructSetting/>
     </div>

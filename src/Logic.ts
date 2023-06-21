@@ -20,9 +20,9 @@ const searchPairPattern = (targetPair:Construct,member_cnt:number):ConstructResu
     for (let i = 0; i < member_cnt; i++) {
         let next_i = dp[i]+1
         targetPair.pairs.forEach((pair)=>{
-            if (select_func(next_i,dp[i+pair])===true) {
-                dp[i+pair] = next_i
-                dp_w[i+pair] = dp_w[i]+String(pair)
+            if (select_func(next_i,dp[i+pair.pair_cnt])===true) {
+                dp[i+pair.pair_cnt] = next_i
+                dp_w[i+pair.pair_cnt] = dp_w[i]+String(pair.pair_cnt)
             }
         })
     }

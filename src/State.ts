@@ -6,21 +6,23 @@ export interface Member {
     name:string,
     level:number
 }
-// pair list
+// pair combination
 export interface Pair {
     idx:number,
     pair:Member[]
 }
+//Save how many pairs
 export interface PairProfile { 
     idx:number,
-    pair_cnt:number,
+    pair_cnt:number, //member per pair
 }
+// pair construct info
 export interface Construct {
-    pairs:PairProfile[]
+    pairs:PairProfile[] //pair kind
 }
-// pairs 
+// pairs info
 export interface ConstructResult {
-    [key:string]:number
+    [key:string]:number //pair count
 }
 
 const membersAtom = atom<Member[]>([{idx:0,name:'name',level:0}])

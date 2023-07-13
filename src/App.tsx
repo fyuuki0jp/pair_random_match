@@ -2,13 +2,16 @@ import React from 'react';
 import './App.css';
 import MemberSheet from './MemberSheet';
 import ConstructSetting from './Construct';
+import { RecoilRoot } from 'recoil';
 
 function App() {
   return (
-    <div className="App" style={{display:'flex'}}>
-      <MemberSheet/>
-      <ConstructSetting/>
-    </div>
+    <RecoilRoot>
+      <div className="App" style={{display:'flex'}}>
+        <MemberSheet/>
+        <ConstructSetting/>
+      </div>
+    </RecoilRoot>
   );
 }
 

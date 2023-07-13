@@ -1,4 +1,4 @@
-import {atom} from 'jotai'
+import { atom, selector } from "recoil"
 
 // member param
 export interface Member {
@@ -25,7 +25,8 @@ export interface ConstructResult {
     [key:string]:number //pair count
 }
 
-const membersAtom = atom<Member[]>([{idx:0,name:'name',level:0}])
-const constructAtom = atom<Construct>({pairs:[{idx:0,pair_cnt:2},{idx:1,pair_cnt:3}]})
+const membersAtom = atom<Member[]>({key:'memberState',default:[{idx:0,name:'名前0',level:0}]})
+
+const constructAtom = atom<Construct>({key:'pairConstruct',default:{pairs:[{idx:0,pair_cnt:2},{idx:1,pair_cnt:3}]}})
 
 export {membersAtom,constructAtom}

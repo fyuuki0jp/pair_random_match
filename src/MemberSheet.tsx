@@ -1,4 +1,4 @@
-import { RecoilState, useRecoilState, useRecoilValue } from 'recoil';
+import { RecoilState, useRecoilState } from 'recoil';
 import React, { useRef, useState } from 'react';
 import {Member, membersAtom} from './State';
 import { combination, searchPairPattern } from './Logic';
@@ -18,9 +18,12 @@ function MemberRow(props:{member:Member,deletefunc:(idx:number)=>void,updatefunc
             alert('名前を空欄にできません。名前を設定してください')
         }else{
             setEdit(false)
-            let newMember:Member = {idx:props.member.idx,name:name,level:props.member.level}
-            props.updatefunc(newMember)
+            props.updatefunc({idx:props.member.idx,name:name,level:props.member.level})
         }
+    }
+    const deleteMember = () => {
+        setEdit(false)
+        props.deletefunc(props.member.idx)
     }
     const editMember = () => {
         setEdit(true)
@@ -29,7 +32,7 @@ function MemberRow(props:{member:Member,deletefunc:(idx:number)=>void,updatefunc
 
     return (
         <li style={{display:'flex',margin:'0.1rem','justifyContent':'space-between',padding:'0.5rem 0.5rem',borderBottom:'solid',color:!edit? 'gray':'blue'}}>
-            {edit ? <FontAwesomeIcon icon={faRemove} size="xl" style={{marginLeft:'10px',color:'red'}} onClick={e=>{props.deletefunc(props.member.idx)}}/>:<FontAwesomeIcon icon={faUser} size="xl" style={{marginLeft:'10px',}}/>}
+            {edit ? <FontAwesomeIcon icon={faRemove} size="xl" style={{marginLeft:'10px',color:'red'}} onClick={deleteMember}/>:<FontAwesomeIcon icon={faUser} size="xl" style={{marginLeft:'10px',}}/>}
             <input ref={inputName} style={{fontSize:'12pt',maxWidth:'150px',appearance:'none',outline:0,border:'none'}} value={name} onChange={e=>{setName(e.target.value)}} readOnly={!edit}></input>
             {!edit ? <FontAwesomeIcon icon={faPencil} size="xl" style={{marginLeft:'10px'}} onClick={editMember}/>:<FontAwesomeIcon icon={faCheck} size="xl" style={{color:'green'}}onClick={updateMember}/>}
         </li>
@@ -39,22 +42,21 @@ function MemberRow(props:{member:Member,deletefunc:(idx:number)=>void,updatefunc
 function MemberSheet(){
     const [members,setMember] = useRecoilState(membersAtom)
 
-    const viewMember = [...members].sort((a,b) => a.idx-b.idx)
     const addMember = () =>{
         const new_id:number = members.length > 0 ? members.reduce((a,b)=> a.idx>b.idx ? a:b).idx+1:1
         let new_member:Member = {idx:new_id,name:'名前'+new_id,level:0}
-        setMember([...members,new_member])
+        setMember([...members,new_member].sort((a,b) => a.idx-b.idx))
     }
     const deleteMember = (idx:number) => {
         let newData = members.filter((item) => {
             return item.idx !== idx ? true:false;
-          });
+          }).sort((a,b) => a.idx-b.idx);
         setMember([...newData])
     }
     const updateMember = (newMember:Member) => {
         let newData = members.map((item:Member) => {
             return item.idx === newMember.idx ? newMember:item;
-        });
+        }).sort((a,b) => a.idx-b.idx);
         setMember([...newData])
     }
 
@@ -70,7 +72,7 @@ function MemberSheet(){
                 <FontAwesomeIcon icon={faList} size='xl' style={{marginLeft:'10px'}}/>
             </div>
 
-            {viewMember.map(m => {return <MemberRow member={m} deletefunc={deleteMember} updatefunc={updateMember}/>})}
+            {members.map(m => {return <MemberRow member={m} deletefunc={deleteMember} updatefunc={updateMember}/>})}
             <button onClick={e=>{
                 alert(JSON.stringify(combination(members,3).length))
             }}>ペア組み合わせテスト</button>

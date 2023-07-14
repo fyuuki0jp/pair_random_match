@@ -2,7 +2,7 @@ import { useRecoilState } from 'recoil';
 import React, { useEffect, useRef, useState } from 'react';
 import {Member, membersAtom} from './State';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faList, faPencil, faPlus, faRemove, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faEllipsisVertical, faList, faPencil, faPlus, faRemove, faUser } from '@fortawesome/free-solid-svg-icons';
 
 
 function MemberRow(props:{member:Member,deletefunc:(idx:number)=>void,updatefunc:(newMember:Member)=>void})
@@ -44,6 +44,7 @@ function MemberRow(props:{member:Member,deletefunc:(idx:number)=>void,updatefunc
 
 function MemberSheet(){
     const [members,setMember] = useRecoilState(membersAtom)
+    const [view,setView] = useState(true)
 
     const addMember = () =>{
         const new_id:number = members.length > 0 ? members.reduce((a,b)=> a.idx>b.idx ? a:b).idx+1:1
@@ -66,17 +67,25 @@ function MemberSheet(){
 
     return (
         <div style={{'minWidth':'300px',maxWidth:'480px',width:'40vw',padding:'0.5rem'}}>
-            <div 
-                style={{display:'flex',margin:'0.1rem','justifyContent':'space-between',padding:'0.5rem 0.5rem',border:'solid',borderRadius:'10px',color:'white',backgroundColor:"#77bb41"}}
-                unselectable={'on'}
-                onClick={e=>{addMember()}}
-            >
-                <FontAwesomeIcon icon={faPlus} size='xl' style={{marginLeft:'10px'}}/>
-                <span style={{fontSize:'15pt',maxWidth:'100%',appearance:'none',outline:0,border:'none'}}>名簿に追加</span>
-                <FontAwesomeIcon icon={faList} size='xl' style={{marginLeft:'10px'}}/>
+            <div style={{display:'flex',justifyContent:'space-between',borderBottom:'double 5px #5490cc',color:'#5490cc',userSelect:'none'}} onClick={()=>{setView(!view)}}>
+                <FontAwesomeIcon icon={faEllipsisVertical} size='xl' style={{marginLeft:'10px'}}/>
+                <span style={{fontSize:'15pt',maxWidth:'100%',appearance:'none',outline:0,border:'none',fontWeight:'bolder'}}>名簿</span>
+                <FontAwesomeIcon icon={faUser} size='xl' style={{marginLeft:'10px'}}/>
             </div>
-
-            {members.map(m => {return <MemberRow member={m} deletefunc={deleteMember} updatefunc={updateMember}/>})}
+            {view &&
+                (<div 
+                    style={{display:'flex',margin:'0.1rem','justifyContent':'space-between',padding:'0.5rem 0.5rem',border:'solid',borderRadius:'10px',color:'white',backgroundColor:'#5490cc',userSelect:'none'}}
+                    unselectable={'on'}
+                    onClick={e=>{addMember()}}
+                >
+                    <FontAwesomeIcon icon={faPlus} size='xl' style={{marginLeft:'10px'}}/>
+                    <span style={{fontSize:'15pt',maxWidth:'100%',appearance:'none',outline:0,border:'none'}}>名簿に追加</span>
+                    <FontAwesomeIcon icon={faList} size='xl' style={{marginLeft:'10px'}}/>
+                </div>
+                )
+            }
+            {view && members.map(m => {return <MemberRow member={m} deletefunc={deleteMember} updatefunc={updateMember}/>})}
+            {!view && <h2>メンバー：{members.length}人</h2>}
             
         </div>
     )

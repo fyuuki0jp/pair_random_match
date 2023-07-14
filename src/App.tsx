@@ -8,8 +8,10 @@ function App() {
   return (
     <RecoilRoot>
       <div className="App" style={{display:'flex'}}>
-        <MemberSheet/>
-        <ConstructSetting/>
+        <div>
+          <ConstructSetting/>
+          <MemberSheet/>
+        </div>
       </div>
     </RecoilRoot>
   );

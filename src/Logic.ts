@@ -9,8 +9,8 @@ const combination = (array:Member[],n:number):Array<Member[]> =>{
     })
 }
 
-const searchPairPattern = (targetPair:Construct,member_cnt:number):ConstructResult =>{
-    const select_func = (a:number,b:number):boolean => {return  a > b}
+const searchPairPattern = (targetPair:Construct,member_cnt:number,direction:boolean):ConstructResult =>{
+    const select_func = (a:number,b:number):boolean => {return  direction ? a > b:a < b}
     const default_value = select_func(2,1) ? -1:member_cnt*2
     let dp = Array<number>(member_cnt*2)
     let dp_w = Array<string>(member_cnt*2)

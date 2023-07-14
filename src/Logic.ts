@@ -14,6 +14,7 @@ const searchPairPattern = (targetPair:Construct,member_cnt:number):ConstructResu
     const default_value = select_func(2,1) ? -1:member_cnt*2
     let dp = Array<number>(member_cnt*2)
     let dp_w = Array<string>(member_cnt*2)
+    console.log(targetPair)
     dp.fill(default_value)
     dp_w.fill('')
     dp[0] = 0

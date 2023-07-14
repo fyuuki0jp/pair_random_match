@@ -84,7 +84,7 @@ function ConstructWorkSetting(){
     )
 }
 
-function ConstructPairDescribe(){
+function ConstructDescribe(){
     const construct = useRecoilValue(constructAtom)
     const members = useRecoilValue(membersAtom)
     const pair_result = searchPairPattern(construct,members.length,construct.pairs[0].pair_cnt < construct.pairs[1].pair_cnt)
@@ -98,7 +98,6 @@ function ConstructPairDescribe(){
 }
 
 function ConstructSetting(){
-    const construct = useRecoilValue(constructAtom)
     const [view,setView] = useState(true)
     return <div style={{'minWidth':'300px',maxWidth:'480px',width:'40vw',padding:'0.5rem'}}>
         <div style={{display:'flex',justifyContent:'space-between',borderBottom:'double 5px #5490cc',color:'#5490cc',userSelect:'none'}} onClick={()=>{setView(!view)}}>
@@ -106,7 +105,8 @@ function ConstructSetting(){
                 <span style={{fontSize:'15pt',maxWidth:'100%',appearance:'none',outline:0,border:'none',fontWeight:'bolder'}}>ペア作成設定</span>
                 <FontAwesomeIcon icon={faGear} size='xl' style={{marginLeft:'10px'}}/>
         </div>
-        {view ? <ConstructPairSetting /> : <ConstructPairDescribe/>}
+        {!view && <ConstructDescribe/>}
+        {view && <ConstructPairSetting />}
         {view && <ConstructWorkSetting />}
     </div>
 }

@@ -1,9 +1,8 @@
-import { RecoilState, useRecoilState } from 'recoil';
-import React, { useRef, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import React, { useEffect, useRef, useState } from 'react';
 import {Member, membersAtom} from './State';
-import { combination, searchPairPattern } from './Logic';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faList,faTrash, faPencil, faPlus, faRemove, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faList, faPencil, faPlus, faRemove, faUser } from '@fortawesome/free-solid-svg-icons';
 
 
 function MemberRow(props:{member:Member,deletefunc:(idx:number)=>void,updatefunc:(newMember:Member)=>void})
@@ -29,6 +28,10 @@ function MemberRow(props:{member:Member,deletefunc:(idx:number)=>void,updatefunc
         setEdit(true)
         inputName.current?.focus()
     }
+
+    useEffect(()=>{
+        setName(props.member.name)
+    },[props])
 
     return (
         <li style={{display:'flex',margin:'0.1rem','justifyContent':'space-between',padding:'0.5rem 0.5rem',borderBottom:'solid',color:!edit? 'gray':'blue'}}>
@@ -60,6 +63,7 @@ function MemberSheet(){
         setMember([...newData])
     }
 
+
     return (
         <div style={{'minWidth':'300px',maxWidth:'480px',width:'40vw',padding:'0.5rem'}}>
             <div 
@@ -73,9 +77,6 @@ function MemberSheet(){
             </div>
 
             {members.map(m => {return <MemberRow member={m} deletefunc={deleteMember} updatefunc={updateMember}/>})}
-            <button onClick={e=>{
-                alert(JSON.stringify(combination(members,3).length))
-            }}>ペア組み合わせテスト</button>
             
         </div>
     )
@@ -83,6 +84,3 @@ function MemberSheet(){
 
 export default MemberSheet
 
-function useRecoilValiue(membersAtom: RecoilState<Member[]>) {
-    throw new Error('Function not implemented.');
-}

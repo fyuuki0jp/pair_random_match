@@ -11,6 +11,17 @@ export interface Pair {
     idx:number,
     pair:Member[]
 }
+
+// monthPairsの要素のインターフェース
+export interface DayPairs {
+    pairs: Pair[]; // ペアの配列
+}
+
+// monthPairsの型のインターフェース
+export interface WorkPairs {
+    WorkPairs: DayPairs[]; // 月のペアの組み合わせの配列
+}
+
 //Save how many pairs
 export interface PairProfile { 
     idx:number,
@@ -25,6 +36,7 @@ export interface Construct {
 export interface ConstructResult {
     [key:string]:number //pair count
 }
+
 
 const membersAtom = atom<Member[]>({key:'memberState',default:[{idx:0,name:'名前0',level:0}]})
 

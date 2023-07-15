@@ -36,7 +36,7 @@ const searchPairPattern = (targetPair:Construct,member_cnt:number,direction:bool
 
 function padPair(pair: Pair, padding: number): Pair {
     const paddedPair = { ...pair };
-    paddedPair.pair = [...pair.pair, ...Array(padding).fill({ idx: -1, name: '', level: -1 })];
+    paddedPair.pair = [...pair.pair, ...Array(padding-pair.pair.length).fill({ idx: -1, name: '', level: -1 })];
     return paddedPair;
 }
 
@@ -78,4 +78,4 @@ async function createWorkPairs(construct:Construct,members:Member[]){
     return ret
 }
 
-export {combination,searchPairPattern,createWorkPairs}
+export {combination,searchPairPattern,createWorkPairs,padPair}

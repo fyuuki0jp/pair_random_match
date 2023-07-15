@@ -66,7 +66,7 @@ function MemberSheet(){
 
 
     return (
-        <div style={{minWidth:'300px',maxWidth:'480px',width:'100vw',padding:'0.5rem'}}>
+        <div style={{minWidth:'300px',maxWidth:'480px',width:'100vw',height:'60vh'}}>
             <div style={{display:'flex',justifyContent:'space-between',borderBottom:'double 5px #5490cc',color:'#5490cc',userSelect:'none'}} onClick={()=>{setView(!view)}}>
                 <FontAwesomeIcon icon={faEllipsisVertical} size='xl' style={{marginLeft:'10px'}}/>
                 <span style={{fontSize:'15pt',maxWidth:'100%',appearance:'none',outline:0,border:'none',fontWeight:'bolder'}}>名簿</span>
@@ -84,9 +84,10 @@ function MemberSheet(){
                 </div>
                 )
             }
-            {view && members.map(m => {return <MemberRow member={m} deletefunc={deleteMember} updatefunc={updateMember}/>})}
-            {!view && <h3>メンバー：{members.length}人</h3>}
-            
+            <div style={{height:'40vh',overflowY:'scroll' }}>
+                {view && members.map(m => {return <MemberRow member={m} deletefunc={deleteMember} updatefunc={updateMember}/>})}
+                {!view && <h3>メンバー：{members.length}人</h3>}
+            </div>            
         </div>
     )
 }

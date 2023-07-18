@@ -1,6 +1,6 @@
 import { useRecoilValue } from 'recoil';
-import React, { useEffect, useRef, useState } from 'react';
-import {Member, membersAtom,constructAtom, DayPairs, Pair, WorkPairs} from './State';
+import React, { useState } from 'react';
+import { membersAtom,constructAtom, DayPairs, Pair, WorkPairs} from './State';
 import { createWorkPairs,padPair } from './Logic';
 import { faCalendar ,faUser} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

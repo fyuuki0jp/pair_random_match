@@ -52,24 +52,26 @@ async function createWorkPairs(construct:Construct,members:Member[]){
         const Day:DayPairs = {pairs:[]}
         construct.pairs.forEach(pair_construct => {
             const targetPairs = allpairs[pair_construct.idx]
-            for(let j = 0;j<pairs[pair_construct.pair_cnt];j++)
-            {
-                const random_idx = Math.floor(Math.random()*targetPairs.length)
-                let target_pair = targetPairs[random_idx]
-                let duplicated_pair = Day.pairs.some(pair =>
-                    pair.pair.some(member => target_pair.pair.some(tmember => tmember.idx===member.idx))
-                ) || yesterday.pairs.some(pair => pair.idx === target_pair.idx)
-                while(duplicated_pair)
+            if(pairs[pair_construct.pair_cnt] >0){
+                for(let j = 0;j<pairs[pair_construct.pair_cnt];j++)
                 {
                     const random_idx = Math.floor(Math.random()*targetPairs.length)
-                    target_pair = targetPairs[random_idx]
-                    
-                    duplicated_pair = Day.pairs.some(pair =>
+                    let target_pair = targetPairs[random_idx]
+                    let duplicated_pair = Day.pairs.some(pair =>
                         pair.pair.some(member => target_pair.pair.some(tmember => tmember.idx===member.idx))
                     ) || yesterday.pairs.some(pair => pair.idx === target_pair.idx)
+                    while(duplicated_pair)
+                    {
+                        const random_idx = Math.floor(Math.random()*targetPairs.length)
+                        target_pair = targetPairs[random_idx]
+                        
+                        duplicated_pair = Day.pairs.some(pair =>
+                            pair.pair.some(member => target_pair.pair.some(tmember => tmember.idx===member.idx))
+                        ) || yesterday.pairs.some(pair => pair.idx === target_pair.idx)
+                    }
+                    Day.pairs.push(target_pair)
+                    pair_idx += 1
                 }
-                Day.pairs.push(target_pair)
-                pair_idx += 1
             }
         })
         ret.WorkPairs.push(Day)

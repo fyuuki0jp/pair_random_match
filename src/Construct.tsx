@@ -97,7 +97,7 @@ function ConstructDescribe(){
 
 function ConstructSetting(){
     const [view,setView] = useState(true)
-    return <div style={{minWidth:'300px',maxWidth:'480px',width:'100vw',height:'20vh',paddingTop:'0.5rem'}}>
+    return <div style={{minWidth:'300px',maxWidth:'480px',width:'100vw',paddingTop:'0.5rem'}}>
         <div style={{display:'flex',justifyContent:'space-between',borderBottom:'double 5px #5490cc',color:'#5490cc',userSelect:'none'}} onClick={()=>{setView(!view)}}>
                 <FontAwesomeIcon icon={faEllipsisVertical} size='xl' style={{marginLeft:'10px'}}/>
                 <span style={{fontSize:'15pt',maxWidth:'100%',appearance:'none',outline:0,border:'none',fontWeight:'bolder'}}>ペア作成設定</span>

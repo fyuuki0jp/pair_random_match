@@ -27,7 +27,11 @@ function WorkCalender(){
     const members = useRecoilValue(membersAtom)
     const [calender,setCalender] = useState<WorkPairs>()
     const generateCalender = () => {
-        createWorkPairs(construct,members).then(setCalender)
+        const error = construct.pairs[0].pair_cnt == construct.pairs[1].pair_cnt
+        if(!error)
+            createWorkPairs(construct,members).then(setCalender)
+        else
+            alert('ペア人数が重複しています設定を見直してください。')
     }
 
     return (

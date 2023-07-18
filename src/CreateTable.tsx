@@ -13,7 +13,7 @@ function DayMember(props:{day:DayPairs}){
         colTitle.push('メンバー'+(i+1))
     }
     return (
-        <table border={1} style={{minWidth:'200px',maxWidth:'600px',width:'25%'}}>
+        <table border={1} style={{minWidth:'300px',maxWidth:'600px',width:'25%'}}>
             <tr>
             {colTitle.map(col => <th style={{width:'90px'}}>{col}</th>)}
             </tr>
@@ -35,7 +35,7 @@ function WorkCalender(){
     }
 
     return (
-        <div style={{minWidth:'300px',width:'70%',height:'80vh' }}>
+        <div style={{minWidth:'300px',width:'70%'}}>
             <div style={{display:'flex',margin:'0.1rem','justifyContent':'space-between',padding:'0.5rem 0.5rem',border:'solid',borderRadius:'10px',color:'white',backgroundColor:'#5490cc',userSelect:'none'}}
                     unselectable={'on'}
                      onClick={generateCalender}>
@@ -43,7 +43,7 @@ function WorkCalender(){
                 <span style={{fontSize:'15pt',maxWidth:'100%',appearance:'none',outline:0,border:'none',fontWeight:'bolder'}}>ペア作成</span>
                 <FontAwesomeIcon icon={faUser} size='xl' style={{marginLeft:'10px'}}/>
             </div>
-            <div style={{display:'flex',flexWrap:'wrap',width:'100%',minWidth:'300px',height:'80vh',overflowY:'scroll'}}>
+            <div style={{display:'flex',flexWrap:'wrap',width:'100%',minWidth:'300px',height:'90vh',overflowY:'auto'}}>
                 {calender?.WorkPairs.map(day => <DayMember day={day}/>)}
             </div>
 

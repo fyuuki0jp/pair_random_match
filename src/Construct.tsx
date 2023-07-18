@@ -1,6 +1,6 @@
 import { useRecoilState,useRecoilValue } from 'recoil';
 import React, { useEffect, useRef, useState } from 'react';
-import {membersAtom , constructAtom, ConstructResult, PairProfile, Pair, Construct} from './State';
+import {membersAtom , constructAtom, ConstructResult, PairProfile, Construct} from './State';
 import { searchPairPattern } from './Logic';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisVertical, faGear, faPencil,faCheck, faCalendarDays, faUserGroup } from '@fortawesome/free-solid-svg-icons';
@@ -28,7 +28,7 @@ function PairConstruct(props:{pair:PairProfile,match_pairs:number,updatefunc:(ne
         <div style={{display:'flex',margin:'0.1rem','justifyContent':'space-between',padding:'0.5rem 0.5rem',borderBottom:'solid',color:!edit? 'gray':'blue'}}>
             <FontAwesomeIcon icon={faUserGroup} size="xl" style={{marginLeft:'10px',}}/>
             {edit ? <select onChange={e => {setPair(parseInt(e.target.value))}}>
-                {pairs.map(cnt => <option value={cnt} selected={cnt==props.pair.pair_cnt}>{cnt}人ペア</option>)}
+                {pairs.map(cnt => <option value={cnt} selected={cnt===props.pair.pair_cnt}>{cnt}人ペア</option>)}
             </select>:<span>{props.pair.pair_cnt}人ペア：{props.match_pairs===undefined ? 0:props.match_pairs}組作成</span>}
             {!edit ? <FontAwesomeIcon icon={faPencil} size="xl" style={{marginLeft:'10px'}} onClick={editPair}/>:<FontAwesomeIcon icon={faCheck} size="xl" style={{color:'green'}} onClick={e => {updatePair(pair)}}/>}
         </div>

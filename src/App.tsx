@@ -8,7 +8,7 @@ import { RecoilRoot } from 'recoil';
 function App() {
   return (
     <RecoilRoot>
-      <div className="App" style={{display:'flex',width:'98vw',margin:'1vw 1vh'}}>
+      <div className="App" style={{display:'flex'}}>
         <div>
           <ConstructSetting/>
           <MemberSheet/>

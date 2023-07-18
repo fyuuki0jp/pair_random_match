@@ -84,7 +84,7 @@ function MemberSheet(){
                 </div>
                 )
             }
-            <div style={{height:'40vh',overflowY:'scroll' }}>
+            <div style={{overflowY:'auto',minHeight:'500px',height:'70vh' }}>
                 {view && members.map(m => {return <MemberRow member={m} deletefunc={deleteMember} updatefunc={updateMember}/>})}
                 {!view && <h3>メンバー：{members.length}人</h3>}
             </div>            

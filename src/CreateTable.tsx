@@ -25,18 +25,24 @@ function DayMember(props:{day:DayPairs}){
 function WorkCalender(){
     const construct = useRecoilValue(constructAtom)
     const members = useRecoilValue(membersAtom)
+    const [generation,setGen] = useState(false)
     const [calender,setCalender] = useState<WorkPairs>()
     const generateCalender = () => {
-        const error = construct.pairs[0].pair_cnt == construct.pairs[1].pair_cnt
+        const error = construct.pairs[0].pair_cnt === construct.pairs[1].pair_cnt
         if(!error)
-            createWorkPairs(construct,members).then(setCalender)
+            if (!generation){
+                setGen(true)
+                createWorkPairs(construct,members).then(e => {setCalender(e);setGen(false)})
+            }
         else
             alert('ペア人数が重複しています設定を見直してください。')
     }
 
     return (
         <div style={{minWidth:'300px',width:'70%'}}>
-            <div style={{display:'flex',margin:'0.1rem','justifyContent':'space-between',padding:'0.5rem 0.5rem',border:'solid',borderRadius:'10px',color:'white',backgroundColor:'#5490cc',userSelect:'none'}}
+            <div style={
+                generation ? {display:'flex',margin:'0.1rem','justifyContent':'space-between',padding:'0.5rem 0.5rem',border:'solid',borderRadius:'10px',color:'white',backgroundColor:'gray',userSelect:'none'}:{display:'flex',margin:'0.1rem','justifyContent':'space-between',padding:'0.5rem 0.5rem',border:'solid',borderRadius:'10px',color:'white',backgroundColor:'#5490cc',userSelect:'none'}
+            }
                     unselectable={'on'}
                      onClick={generateCalender}>
                 <FontAwesomeIcon icon={faCalendar} size='xl' style={{marginLeft:'10px'}}/>
@@ -46,7 +52,6 @@ function WorkCalender(){
             <div style={{display:'flex',flexWrap:'wrap',width:'100%',minWidth:'300px',height:'90vh',overflowY:'auto'}}>
                 {calender?.WorkPairs.map(day => <DayMember day={day}/>)}
             </div>
-
         </div>
     )
 }

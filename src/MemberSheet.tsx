@@ -64,6 +64,16 @@ function MemberSheet(){
         setMember([...newData])
     }
 
+    const addClipMember = () => {
+        if(navigator.clipboard){
+            let idx = 0
+            navigator.clipboard.readText()
+            .then(function(text){
+                setMember(text.split('\n').filter((name:string)=>{return name !== ''}).map((name:string):Member => {return {idx:idx++,name:name,level:0}}))
+            });
+        }
+    }
+
 
     return (
         <div style={{minWidth:'300px',maxWidth:'480px',width:'100vw'}}>
@@ -73,7 +83,8 @@ function MemberSheet(){
                 <FontAwesomeIcon icon={faUser} size='xl' style={{marginLeft:'10px'}}/>
             </div>
             {view &&
-                (<div 
+                (
+                <div 
                     style={{display:'flex',margin:'0.1rem','justifyContent':'space-between',padding:'0.5rem 0.5rem',border:'solid',borderRadius:'10px',color:'white',backgroundColor:'#5490cc',userSelect:'none'}}
                     unselectable={'on'}
                     onClick={e=>{addMember()}}
@@ -84,10 +95,19 @@ function MemberSheet(){
                 </div>
                 )
             }
-            <div style={{overflowY:'auto',minHeight:'500px',height:'70vh' }}>
+            <div style={{overflowY:'auto',minHeight:'500px',height:'65vh' }}>
                 {view && members.map(m => {return <MemberRow member={m} deletefunc={deleteMember} updatefunc={updateMember}/>})}
                 {!view && <h3>メンバー：{members.length}人</h3>}
-            </div>            
+            </div>
+            <div 
+                    style={{display:'flex',margin:'0.1rem','justifyContent':'space-between',padding:'0.5rem 0.5rem',border:'solid',borderRadius:'10px',color:'white',backgroundColor:'#5490cc',userSelect:'none'}}
+                    unselectable={'on'}
+                    onClick={e=>{addClipMember()}}
+                >
+                    <FontAwesomeIcon icon={faPlus} size='xl' style={{marginLeft:'10px'}}/>
+                    <span style={{fontSize:'15pt',maxWidth:'100%',appearance:'none',outline:0,border:'none'}}>クリップボードから名簿を取り込む</span>
+                    <FontAwesomeIcon icon={faList} size='xl' style={{marginLeft:'10px'}}/>
+                </div>
         </div>
     )
 }

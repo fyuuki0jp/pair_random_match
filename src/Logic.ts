@@ -52,7 +52,7 @@ async function createWorkPairs(construct:Construct,members:Member[]){
         const Day:DayPairs = {pairs:[]}
         construct.pairs.forEach(pair_construct => {
             const targetPairs = allpairs[pair_construct.idx]
-            if(pairs[pair_construct.pair_cnt] >0){
+            if(pairs[pair_construct.pair_cnt] > 0){
                 for(let j = 0;j<pairs[pair_construct.pair_cnt];j++)
                 {
                     const random_idx = Math.floor(Math.random()*targetPairs.length)
@@ -60,14 +60,29 @@ async function createWorkPairs(construct:Construct,members:Member[]){
                     let duplicated_pair = Day.pairs.some(pair =>
                         pair.pair.some(member => target_pair.pair.some(tmember => tmember.idx===member.idx))
                     ) || yesterday.pairs.some(pair => pair.idx === target_pair.idx)
-                    while(duplicated_pair)
+                    let idx = random_idx;
+                    let day_member = Day.pairs.reduce((total:number,pair:Pair,idx,array)=>{return total+pair.pair.length},0)
+                    if (day_member+pair_construct.pair_cnt >= members.length)
                     {
-                        const random_idx = Math.floor(Math.random()*targetPairs.length)
-                        target_pair = targetPairs[random_idx]
-                        
-                        duplicated_pair = Day.pairs.some(pair =>
-                            pair.pair.some(member => target_pair.pair.some(tmember => tmember.idx===member.idx))
-                        ) || yesterday.pairs.some(pair => pair.idx === target_pair.idx)
+                        while(duplicated_pair)
+                        {
+                            idx =  Math.floor(Math.random()*targetPairs.length);
+                            target_pair = targetPairs[idx]
+                            
+                            duplicated_pair = Day.pairs.some(pair =>
+                                pair.pair.some(member => target_pair.pair.some(tmember => tmember.idx===member.idx))
+                            )
+                        }
+                    }else{
+                        while(duplicated_pair)
+                        {
+                            idx =  Math.floor(Math.random()*targetPairs.length);
+                            target_pair = targetPairs[idx]
+                            
+                            duplicated_pair = Day.pairs.some(pair =>
+                                pair.pair.some(member => target_pair.pair.some(tmember => tmember.idx===member.idx))
+                            ) || yesterday.pairs.some(pair => pair.idx === target_pair.idx)
+                        }
                     }
                     Day.pairs.push(target_pair)
                     pair_idx += 1

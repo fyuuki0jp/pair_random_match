@@ -2,7 +2,7 @@ import { useRecoilValue } from 'recoil';
 import React, { useState } from 'react';
 import { membersAtom,constructAtom, DayPairs, Pair, WorkPairs} from './State';
 import { createWorkPairs,padPair } from './Logic';
-import { faCalendar ,faUser} from '@fortawesome/free-solid-svg-icons';
+import { faCalendar ,faUser ,faDownload} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as iconv from "iconv-lite";
 
@@ -70,7 +70,15 @@ function WorkCalender(){
             <div style={{display:'flex',flexWrap:'wrap',width:'100%',minWidth:'300px',height:'90vh',overflowY:'auto'}}>
                 {calender?.WorkPairs.map(day => <DayMember day={day}/>)}
             </div>
-            <button onClick={createCSVoutput}>テスト</button>
+            <div style={
+                generation ? {display:'flex',margin:'0.1rem','justifyContent':'space-between',padding:'0.5rem 0.5rem',border:'solid',borderRadius:'10px',color:'white',backgroundColor:'gray',userSelect:'none'}:{display:'flex',margin:'0.1rem','justifyContent':'space-between',padding:'0.5rem 0.5rem',border:'solid',borderRadius:'10px',color:'white',backgroundColor:'#5490cc',userSelect:'none'}
+            }
+                    unselectable={'on'}
+                     onClick={createCSVoutput}>
+                <FontAwesomeIcon icon={faCalendar} size='xl' style={{marginLeft:'10px'}}/>
+                <span style={{fontSize:'15pt',maxWidth:'100%',appearance:'none',outline:0,border:'none',fontWeight:'bolder'}}>CSV出力</span>
+                <FontAwesomeIcon icon={faDownload} size='xl' style={{marginLeft:'10px'}}/>
+            </div>
         </div>
     )
 }

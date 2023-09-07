@@ -4,6 +4,7 @@ import { membersAtom,constructAtom, DayPairs, Pair, WorkPairs} from './State';
 import { createWorkPairs,padPair } from './Logic';
 import { faCalendar ,faUser} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as iconv from "iconv-lite";
 
 function DayMember(props:{day:DayPairs}){
     const maxMember = props.day.pairs.reduce((acc:number,pair:Pair) => acc < pair.pair.length ? pair.pair.length:acc,0)
@@ -38,6 +39,23 @@ function WorkCalender(){
             alert('ペア人数が重複しています設定を見直してください。')
     }
 
+    const createCSVoutput = () => {
+
+        if(calender===undefined) return;
+
+        let day_num = 1
+        const output_data: string = calender.WorkPairs.map((day:DayPairs) => (day_num++)+'日目\n'+day.pairs.map((pair:Pair) => pair.pair.map(member=> member.name).join(',')).join('\n')).join('\n')
+        const result = iconv.encode(output_data,"Shift_JIS")
+        const blob = new Blob([result],{type:"text/csv"});
+        const link = document.createElement('a');
+
+        link.href = URL.createObjectURL(blob);
+
+        link.download = 'pair_list.csv';
+
+        link.click();
+    }
+
     return (
         <div style={{minWidth:'300px',width:'70%'}}>
             <div style={
@@ -52,6 +70,7 @@ function WorkCalender(){
             <div style={{display:'flex',flexWrap:'wrap',width:'100%',minWidth:'300px',height:'90vh',overflowY:'auto'}}>
                 {calender?.WorkPairs.map(day => <DayMember day={day}/>)}
             </div>
+            <button onClick={createCSVoutput}>テスト</button>
         </div>
     )
 }

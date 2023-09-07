@@ -33,7 +33,7 @@ function WorkCalender(){
         if(!error)
             if (!generation){
                 setGen(true)
-                createWorkPairs(construct,members).then(e => {setCalender(e);setGen(false)})
+                setTimeout(()=>{createWorkPairs(construct,members).then(e => {setCalender(e);setGen(false)})},1)
             }
         else
             alert('ペア人数が重複しています設定を見直してください。')
@@ -68,7 +68,8 @@ function WorkCalender(){
                 <FontAwesomeIcon icon={faUser} size='xl' style={{marginLeft:'10px'}}/>
             </div>
             <div style={{display:'flex',flexWrap:'wrap',width:'100%',minWidth:'300px',height:'90vh',overflowY:'auto'}}>
-                {calender?.WorkPairs.map(day => <DayMember day={day}/>)}
+                {!generation && calender?.WorkPairs.map(day => <DayMember day={day}/>)}
+                {generation && <h3>ペア作成中...</h3>}
             </div>
             <div style={
                 generation ? {display:'flex',margin:'0.1rem','justifyContent':'space-between',padding:'0.5rem 0.5rem',border:'solid',borderRadius:'10px',color:'white',backgroundColor:'gray',userSelect:'none'}:{display:'flex',margin:'0.1rem','justifyContent':'space-between',padding:'0.5rem 0.5rem',border:'solid',borderRadius:'10px',color:'white',backgroundColor:'#5490cc',userSelect:'none'}

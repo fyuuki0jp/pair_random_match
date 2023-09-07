@@ -4,6 +4,7 @@ import {membersAtom , constructAtom, ConstructResult, PairProfile, Construct} fr
 import { searchPairPattern } from './Logic';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisVertical, faGear, faPencil,faCheck, faCalendarDays, faUserGroup } from '@fortawesome/free-solid-svg-icons';
+import { faRotate } from '@fortawesome/free-solid-svg-icons';
 
 function PairConstruct(props:{pair:PairProfile,match_pairs:number,updatefunc:(newPair:PairProfile)=>void}){
     const pairs = [2,3,4,5]
@@ -82,6 +83,33 @@ function ConstructWorkSetting(){
     )
 }
 
+function ConstructTrialSetting(){
+    const [construct,setConstruct] = useRecoilState(constructAtom)
+    const [edit,setEdit] = useState(false)
+    const [trials,setTrial] = useState(construct.n_trials)
+    const inputName = useRef<HTMLInputElement>(null)
+
+    const updateWorkDay = (n_trials:number) => {
+        let newConstruct:Construct = JSON.parse(JSON.stringify(construct))
+        newConstruct.n_trials = n_trials
+        setConstruct(newConstruct)
+        setEdit(false)
+    }
+
+    const editDay = () => {
+        setEdit(true)
+        inputName.current?.focus()
+    }
+
+    return (
+        <div style={{display:'flex',margin:'0.1rem','justifyContent':'space-between',padding:'0.5rem 0.5rem',borderBottom:'solid',color:!edit? 'gray':'blue'}}>
+            <FontAwesomeIcon icon={faRotate} size="xl" style={{marginLeft:'10px',}}/>
+            <input ref={inputName} style={{fontSize:'12pt',maxWidth:'150px',appearance:'none',outline:0,border:'none'}} value={trials} onChange={e=>{setTrial(isNaN(parseInt(e.target.value)) ? 1:parseInt(e.target.value))}} readOnly={!edit}></input>
+            {!edit ? <FontAwesomeIcon icon={faPencil} size="xl" style={{marginLeft:'10px'}} onClick={editDay}/>:<FontAwesomeIcon icon={faCheck} size="xl" style={{color:'green'}} onClick={e => {updateWorkDay(trials)}}/>}
+        </div>
+    )
+}
+
 function ConstructDescribe(){
     const construct = useRecoilValue(constructAtom)
     const members = useRecoilValue(membersAtom)
@@ -91,6 +119,7 @@ function ConstructDescribe(){
         <div>
             {construct.pairs.map(pair => <h3>{pair.pair_cnt}人ペア：{pair_result[pair.pair_cnt]===undefined ? 0:pair_result[pair.pair_cnt]}組作成</h3>)}
             <h3>作成期間：{construct.work_day}日</h3>
+            <h3>ペア作成試行回数：{construct.n_trials}回</h3>
         </div>
     )
 }
@@ -106,6 +135,7 @@ function ConstructSetting(){
         {!view && <ConstructDescribe/>}
         {view && <ConstructPairSetting />}
         {view && <ConstructWorkSetting />}
+        {view && <ConstructTrialSetting />}
     </div>
 }
 

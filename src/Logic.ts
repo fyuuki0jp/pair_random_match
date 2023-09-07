@@ -1,3 +1,4 @@
+import { number } from "yargs"
 import { Construct, ConstructResult, DayPairs, Member,WorkPairs,Pair, } from "./State"
 
 // 組み合わせ関数
@@ -40,12 +41,14 @@ function padPair(pair: Pair, padding: number): Pair {
     return paddedPair;
 }
 
-async function createWorkPairs(construct:Construct,members:Member[]){
+function _createWorkPairsTrial(construct:Construct,members:Member[]): [WorkPairs,number,number,number,number]{
     const ret:WorkPairs = {WorkPairs:[]}
     const pairs:ConstructResult = members.length > 0 ? searchPairPattern(construct,members.length,construct.pairs[0].pair_cnt < construct.pairs[1].pair_cnt):{}
     let tidx = 0
     const allpairs:Pair[][] = construct.pairs.map(pair => combination(members,pair.pair_cnt).map(pair =>{tidx+=1;return {idx:tidx,pair:pair}}))
     let yesterday:DayPairs = {pairs:[]}
+    let beforeyesterday:DayPairs = {pairs:[]}
+    let beforeday:DayPairs[] = [{pairs:[]}]
     let pair_idx = 0
     for(let i = 0;i<construct.work_day;i++)
     {
@@ -59,7 +62,7 @@ async function createWorkPairs(construct:Construct,members:Member[]){
                     let target_pair = targetPairs[random_idx]
                     let duplicated_pair = Day.pairs.some(pair =>
                         pair.pair.some(member => target_pair.pair.some(tmember => tmember.idx===member.idx))
-                    ) || yesterday.pairs.some(pair => pair.idx === target_pair.idx)
+                    ) || beforeday.map(yesterday => yesterday.pairs.some(pair => pair.idx === target_pair.idx)).some(value=>value)
                     let idx = random_idx;
                     let day_member = Day.pairs.reduce((total:number,pair:Pair,idx,array)=>{return total+pair.pair.length},0)
                     if (day_member+pair_construct.pair_cnt >= members.length)
@@ -81,7 +84,7 @@ async function createWorkPairs(construct:Construct,members:Member[]){
                             
                             duplicated_pair = Day.pairs.some(pair =>
                                 pair.pair.some(member => target_pair.pair.some(tmember => tmember.idx===member.idx))
-                            ) || yesterday.pairs.some(pair => pair.idx === target_pair.idx)
+                            ) || beforeday.map(yesterday => yesterday.pairs.some(pair => pair.idx === target_pair.idx)).some(value=>value)
                         }
                     }
                     Day.pairs.push(target_pair)
@@ -91,8 +94,47 @@ async function createWorkPairs(construct:Construct,members:Member[]){
         })
         ret.WorkPairs.push(Day)
         yesterday = JSON.parse(JSON.stringify(Day))
+        beforeday.push(yesterday)
+        beforeday = beforeday.slice(Math.max(-Math.floor(members.length/2.0),-5))
     }
-    return ret
+    const pair_idx_list = ret.WorkPairs.reduce((prev:number[],dayPairs) => {
+        dayPairs.pairs.map(pair => pair.idx).forEach(pair_idx => prev.push(pair_idx))
+        return prev
+    },[])
+    const pair_count = pair_idx_list.reduce(function(prev: Map<number,number>, current) {
+        prev.set(current,(prev.get(current) || 0)+1);
+        return prev;
+      }, new Map<number,number>())
+    const duplicat_pair_count = Array.from(pair_count.values()).reduce((prev,current)=> prev+(current>1 ? 1:0),0)
+    const used_pair_count = pair_count.size
+    const max_pair_count = Array.from(pair_count.values()).reduce((prev,current) => current>prev ? current:prev,0)
+    const required_pair_count = ret.WorkPairs.reduce((prev,current)=>current.pairs.length+prev,0)
+    return [ret,duplicat_pair_count,used_pair_count,required_pair_count,max_pair_count]
+}
+
+async function createWorkPairs(construct:Construct,members:Member[]){
+    function eval_func(duplicat_pair_count:number,used_pair_count:number,required_pair_count:number,max_pair_count:number)
+    {
+        const use_rate = used_pair_count/required_pair_count
+        const dup_rate = duplicat_pair_count/required_pair_count
+        return use_rate-dup_rate-max_pair_count*0.1
+    }
+    let best_ret:WorkPairs = {WorkPairs:[]}
+    let best_pair = [0,0,0]
+    let best_score = -1.0
+    let trials = construct.n_trials
+    for (let index = 0; index < trials; index++) {
+        const [ret,duplicat_pair_count,used_pair_count,required_pair_count,max_pair_count] = _createWorkPairsTrial(construct,members)
+        const score = eval_func(duplicat_pair_count,used_pair_count,required_pair_count,max_pair_count)
+        if(score > best_score)
+        {
+            best_ret=JSON.parse(JSON.stringify(ret))
+            best_score = score
+            best_pair = [duplicat_pair_count,used_pair_count,required_pair_count,max_pair_count]
+        }
+    }
+    console.log(best_score,best_pair)
+    return best_ret
 }
 
 export {combination,searchPairPattern,createWorkPairs,padPair}

@@ -31,6 +31,7 @@ export interface PairProfile {
 export interface Construct {
     pairs:PairProfile[] //pair kind
     work_day:number
+    n_trials:number
 }
 // pairs info
 export interface ConstructResult {
@@ -40,6 +41,6 @@ export interface ConstructResult {
 
 const membersAtom = atom<Member[]>({key:'memberState',default:[{idx:0,name:'名前0',level:0}]})
 
-const constructAtom = atom<Construct>({key:'pairConstruct',default:{pairs:[{idx:0,pair_cnt:2},{idx:1,pair_cnt:3}],work_day:30}})
+const constructAtom = atom<Construct>({key:'pairConstruct',default:{pairs:[{idx:0,pair_cnt:2},{idx:1,pair_cnt:3}],work_day:30,n_trials:100}})
 
 export {membersAtom,constructAtom}

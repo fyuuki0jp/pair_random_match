@@ -112,7 +112,7 @@ function _createWorkPairsTrial(construct:Construct,members:Member[]): [WorkPairs
     return [ret,duplicat_pair_count,used_pair_count,required_pair_count,max_pair_count]
 }
 
-async function createWorkPairs(construct:Construct,members:Member[]){
+async function createWorkPairs(construct:Construct,members:Member[]): Promise<[WorkPairs,number,number,number,number]>{
     function eval_func(duplicat_pair_count:number,used_pair_count:number,required_pair_count:number,max_pair_count:number)
     {
         const use_rate = used_pair_count/required_pair_count
@@ -121,7 +121,7 @@ async function createWorkPairs(construct:Construct,members:Member[]){
     }
     let best_ret:WorkPairs = {WorkPairs:[]}
     let best_pair = [0,0,0]
-    let best_score = -1.0
+    let best_score = -construct.work_day*10
     let trials = construct.n_trials
     for (let index = 0; index < trials; index++) {
         const [ret,duplicat_pair_count,used_pair_count,required_pair_count,max_pair_count] = _createWorkPairsTrial(construct,members)
@@ -134,7 +134,7 @@ async function createWorkPairs(construct:Construct,members:Member[]){
         }
     }
     console.log(best_score,best_pair)
-    return best_ret
+    return [best_ret,best_pair[0],best_pair[1],best_pair[2],best_pair[3]]
 }
 
 export {combination,searchPairPattern,createWorkPairs,padPair}

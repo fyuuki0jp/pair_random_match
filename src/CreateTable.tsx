@@ -33,7 +33,11 @@ function WorkCalender(){
         if(!error)
             if (!generation){
                 setGen(true)
-                setTimeout(()=>{createWorkPairs(construct,members).then(e => {setCalender(e);setGen(false)})},1)
+                setTimeout(()=>{createWorkPairs(construct,members).then((e) => {
+                    setCalender(e[0]);
+                    alert(['作成結果','重複したペアの数'+e[1],'使用したペアの数'+e[2],'必要なペアの数'+e[3],'頻出ペア回数'+e[4]].join('\n'))
+                    setGen(false)
+                })},1)
             }
         else
             alert('ペア人数が重複しています設定を見直してください。')

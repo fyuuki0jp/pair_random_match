@@ -1,4 +1,3 @@
-import { number } from "yargs"
 import { Construct, ConstructResult, DayPairs, Member,WorkPairs,Pair, } from "./State"
 
 // 組み合わせ関数
@@ -47,9 +46,7 @@ function _createWorkPairsTrial(construct:Construct,members:Member[]): [WorkPairs
     let tidx = 0
     const allpairs:Pair[][] = construct.pairs.map(pair => combination(members,pair.pair_cnt).map(pair =>{tidx+=1;return {idx:tidx,pair:pair}}))
     let yesterday:DayPairs = {pairs:[]}
-    let beforeyesterday:DayPairs = {pairs:[]}
     let beforeday:DayPairs[] = [{pairs:[]}]
-    let pair_idx = 0
     for(let i = 0;i<construct.work_day;i++)
     {
         const Day:DayPairs = {pairs:[]}
@@ -88,14 +85,13 @@ function _createWorkPairsTrial(construct:Construct,members:Member[]): [WorkPairs
                         }
                     }
                     Day.pairs.push(target_pair)
-                    pair_idx += 1
                 }
             }
         })
         ret.WorkPairs.push(Day)
         yesterday = JSON.parse(JSON.stringify(Day))
         beforeday.push(yesterday)
-        beforeday = beforeday.slice(Math.max(-Math.floor(members.length/2.0),-5))
+        beforeday = beforeday.slice(Math.max(-Math.floor(members.length/2.0),-3))
     }
     const pair_idx_list = ret.WorkPairs.reduce((prev:number[],dayPairs) => {
         dayPairs.pairs.map(pair => pair.idx).forEach(pair_idx => prev.push(pair_idx))

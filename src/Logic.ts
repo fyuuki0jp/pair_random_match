@@ -40,7 +40,7 @@ function padPair(pair: Pair, padding: number): Pair {
     return paddedPair;
 }
 
-function _createWorkPairsTrial(construct:Construct,members:Member[]): [WorkPairs,number,number,number,number]{
+async function _createWorkPairsTrial(construct:Construct,members:Member[]): Promise<[WorkPairs,number,number,number,number]>{
     const ret:WorkPairs = {WorkPairs:[]}
     const pairs:ConstructResult = members.length > 0 ? searchPairPattern(construct,members.length,construct.pairs[0].pair_cnt < construct.pairs[1].pair_cnt):{}
     let tidx = 0
@@ -115,22 +115,27 @@ async function createWorkPairs(construct:Construct,members:Member[]): Promise<[W
         const dup_rate = duplicat_pair_count/required_pair_count
         return use_rate-dup_rate-max_pair_count*0.1
     }
-    let best_ret:WorkPairs = {WorkPairs:[]}
-    let best_pair = [0,0,0]
-    let best_score = -construct.work_day*10
-    let trials = construct.n_trials
-    for (let index = 0; index < trials; index++) {
-        const [ret,duplicat_pair_count,used_pair_count,required_pair_count,max_pair_count] = _createWorkPairsTrial(construct,members)
-        const score = eval_func(duplicat_pair_count,used_pair_count,required_pair_count,max_pair_count)
-        if(score > best_score)
-        {
-            best_ret=JSON.parse(JSON.stringify(ret))
-            best_score = score
-            best_pair = [duplicat_pair_count,used_pair_count,required_pair_count,max_pair_count]
-        }
+    let trials_promise = []
+    for (let index = 0; index < construct.n_trials; index++) {
+        trials_promise.push(_createWorkPairsTrial(construct,members).then((return_value) => {
+            const [ret,duplicat_pair_count,used_pair_count,required_pair_count,max_pair_count] = return_value
+            const score = eval_func(duplicat_pair_count,used_pair_count,required_pair_count,max_pair_count)
+            return {score:score,pair:ret,best_pair:[duplicat_pair_count,used_pair_count,required_pair_count,max_pair_count]}
+        }))
     }
-    console.log(best_score,best_pair)
-    return [best_ret,best_pair[0],best_pair[1],best_pair[2],best_pair[3]]
+    const return_scores = await Promise.all(trials_promise)
+    const best = return_scores.reduce((max_data:{score:number,pair:WorkPairs,best_pair:number[]},now_data:{score:number,pair:WorkPairs,best_pair:number[]})=>{
+        if (max_data.score < now_data.score)
+        {
+            max_data.score = now_data.score
+            max_data.pair = now_data.pair
+            max_data.best_pair = now_data.best_pair
+        }
+        return max_data
+    },{score:-construct.work_day*10,pair:{WorkPairs:[]},best_pair:[0,0,0]})
+
+    console.log(best)
+    return [best.pair,best.best_pair[0],best.best_pair[1],best.best_pair[2],best.best_pair[3]]
 }
 
 export {combination,searchPairPattern,createWorkPairs,padPair}
